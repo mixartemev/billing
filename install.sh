@@ -1,6 +1,7 @@
 #!/bin/bash
 #1. get dependencies
 composer install
+composer install
 #4. set db access
 sed -i "s/{db_login}/$1/" ./config/db.php
 sed -i "s/{db_password}/$2/" ./config/db.php
