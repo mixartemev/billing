@@ -21,7 +21,7 @@ echo "\n-->Create database structure and fill it\n"
 php yii migrate --interactive=0
 echo "Done!"
 
-#5. set up daily currency rate logger
-echo "\n-->Create database structure and fill it\n"
+#5. set cron job
+echo "\n-->Set up daily currency rate logger\n"
 sudo sh -c "echo '0 11 * * * ~/billing/yii cli/get-currency-rates' >> /var/spool/cron/crontabs/`whoami`"
 echo "Done!"
