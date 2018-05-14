@@ -1,29 +1,22 @@
-#!/bin/bash
-
-#== Bash helpers ==
-function info {
-  echo " "
-  echo "--> $1"
-  echo " "
-}
+#!/usr/bin/env bash
 
 #1. get dependencies
-info "Get dependencies"
+echo "\n-->Get dependencies\n"
 composer install
 echo "Done!"
 
 #2. set db access
-info "Configure database access"
+echo "\n-->Configure database access\n"
 sed -i "s/{db_login}/$1/" config/db.php
 sed -i "s/{db_password}/$2/" config/db.php
 echo "Done!"
 
 #3. create db
-info "Create database"
+echo "\n-->Create database\n"
 mysqladmin -u $1 -fp$2 create billing
 echo "Done!"
 
 #4. fill db
-info "Create database structure and fill it"
+echo "\n-->Create database structure and fill it\n"
 php yii migrate --interactive=0
 echo "Done!"
