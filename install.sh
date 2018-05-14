@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#== Bash helpers ==
+function info {
+  echo " "
+  echo "--> $1"
+  echo " "
+}
+
 #1. get dependencies
 info "Get dependencies"
 composer install
