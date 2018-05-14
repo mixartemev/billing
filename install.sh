@@ -1,9 +1,5 @@
 #!/bin/bash
-#1. clone rep
-git clone git@github.com:mixartemev/billing.git
-#2. go to project dir
-cd billing
-#3. get dependencies
+#1. get dependencies
 composer install
 #4. set db access
 sed -i "s/{db_login}/$1/" ./config/db.php
