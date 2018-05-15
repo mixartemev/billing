@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "transction".
+ * This is the model class for table "transaction".
  *
  * @property int $id
  * @property int $from
@@ -18,14 +18,14 @@ use Yii;
  * @property Client $from0
  * @property Client $to0
  */
-class Transction extends \yii\db\ActiveRecord
+class Transaction extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'transction';
+        return 'transaction';
     }
 
     /**

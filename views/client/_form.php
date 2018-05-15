@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'city_id')->textInput() ?>
+
     <?= $form->field($model, 'ballance')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'currency_id')->textInput() ?>

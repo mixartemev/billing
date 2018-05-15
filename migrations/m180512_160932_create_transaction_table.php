@@ -3,21 +3,21 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `transction`.
+ * Handles the creation of table `transaction`.
  * Has foreign keys to the tables:
  *
  * - `client`
  * - `client`
  * - `currency`
  */
-class m180512_160932_create_transction_table extends Migration
+class m180512_160932_create_transaction_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('transction', [
+        $this->createTable('transaction', [
             'id' => $this->primaryKey(),
             'from' => $this->integer()->unsigned()->notNull(),
             'to' => $this->integer()->unsigned()->notNull(),
@@ -28,15 +28,15 @@ class m180512_160932_create_transction_table extends Migration
 
         // creates index for column `from`
         $this->createIndex(
-            'idx-transction-from',
-            'transction',
+            'idx-transaction-from',
+            'transaction',
             'from'
         );
 
         // add foreign key for table `client`
         $this->addForeignKey(
-            'fk-transction-from',
-            'transction',
+            'fk-transaction-from',
+            'transaction',
             'from',
             'client',
             'id',
@@ -45,15 +45,15 @@ class m180512_160932_create_transction_table extends Migration
 
         // creates index for column `to`
         $this->createIndex(
-            'idx-transction-to',
-            'transction',
+            'idx-transaction-to',
+            'transaction',
             'to'
         );
 
         // add foreign key for table `client`
         $this->addForeignKey(
-            'fk-transction-to',
-            'transction',
+            'fk-transaction-to',
+            'transaction',
             'to',
             'client',
             'id',
@@ -62,15 +62,15 @@ class m180512_160932_create_transction_table extends Migration
 
         // creates index for column `currency_id`
         $this->createIndex(
-            'idx-transction-currency_id',
-            'transction',
+            'idx-transaction-currency_id',
+            'transaction',
             'currency_id'
         );
 
         // add foreign key for table `currency`
         $this->addForeignKey(
-            'fk-transction-currency_id',
-            'transction',
+            'fk-transaction-currency_id',
+            'transaction',
             'currency_id',
             'currency',
             'id',
@@ -85,40 +85,40 @@ class m180512_160932_create_transction_table extends Migration
     {
         // drops foreign key for table `client`
         $this->dropForeignKey(
-            'fk-transction-from',
-            'transction'
+            'fk-transaction-from',
+            'transaction'
         );
 
         // drops index for column `from`
         $this->dropIndex(
-            'idx-transction-from',
-            'transction'
+            'idx-transaction-from',
+            'transaction'
         );
 
         // drops foreign key for table `client`
         $this->dropForeignKey(
-            'fk-transction-to',
-            'transction'
+            'fk-transaction-to',
+            'transaction'
         );
 
         // drops index for column `to`
         $this->dropIndex(
-            'idx-transction-to',
-            'transction'
+            'idx-transaction-to',
+            'transaction'
         );
 
         // drops foreign key for table `currency`
         $this->dropForeignKey(
-            'fk-transction-currency_id',
-            'transction'
+            'fk-transaction-currency_id',
+            'transaction'
         );
 
         // drops index for column `currency_id`
         $this->dropIndex(
-            'idx-transction-currency_id',
-            'transction'
+            'idx-transaction-currency_id',
+            'transaction'
         );
 
-        $this->dropTable('transction');
+        $this->dropTable('transaction');
     }
 }

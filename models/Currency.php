@@ -14,7 +14,7 @@ use yii\httpclient\Client as HttpClient;
  * @property Client[] $clients
  * @property Country[] $countries
  * @property RateHistory[] $rateHistories
- * @property Transction[] $transctions
+ * @property Transaction[] $transactions
  */
 class Currency extends \yii\db\ActiveRecord
 {
@@ -75,9 +75,9 @@ class Currency extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTransctions()
+    public function getTransactions()
     {
-        return $this->hasMany(Transction::className(), ['currency_id' => 'id']);
+        return $this->hasMany(Transaction::className(), ['currency_id' => 'id']);
     }
 
     /**

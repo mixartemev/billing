@@ -15,8 +15,8 @@ use Yii;
  *
  * @property City $city
  * @property Currency $currency
- * @property Transction[] $transctions
- * @property Transction[] $transctions0
+ * @property Transaction[] $transactions
+ * @property Transaction[] $transactions0
  */
 class Client extends \yii\db\ActiveRecord
 {
@@ -76,16 +76,16 @@ class Client extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTransctions()
+    public function getTransactions()
     {
-        return $this->hasMany(Transction::className(), ['from' => 'id']);
+        return $this->hasMany(Transaction::className(), ['from' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTransctions0()
+    public function getTransactions0()
     {
-        return $this->hasMany(Transction::className(), ['to' => 'id']);
+        return $this->hasMany(Transaction::className(), ['to' => 'id']);
     }
 }
