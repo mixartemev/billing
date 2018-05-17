@@ -40,7 +40,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Clients', 'url' => ['/client/index']],
             ['label' => 'Transactions', 'url' => ['/transaction/index']],
-            ['label' => 'Rate history', 'url' => ['/rate-history/index']],
+            ['label' => 'Currency Rates', 'url' => ['/rate-history/index']],
         ],
     ]);
     NavBar::end();
