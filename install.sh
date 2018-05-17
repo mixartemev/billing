@@ -1,27 +1,22 @@
 #!/usr/bin/env bash
 
-#1. get dependencies
-echo "\n-->Get dependencies\n"
+echo "#1. --> Get dependencies"
 composer install
 echo "Done!"
 
-#2. set db access
-echo "\n-->Configure database access\n"
+echo "#2. --> Configure database access"
 sed -i "s/{db_login}/$1/" config/db.php
 sed -i "s/{db_password}/$2/" config/db.php
 echo "Done!"
 
-#3. create db
-echo "\n-->Create database\n"
+echo "#3. --> Create database"
 mysqladmin -u $1 -fp$2 create billing
 echo "Done!"
 
-#4. fill db
-echo "\n-->Create database structure and fill it\n"
+echo "#4. --> Create database structure and fill it"
 php yii migrate --interactive=0
 echo "Done!"
 
-#5. set cron job
-echo "\n-->Set up daily currency rate logger\n"
+echo "#5. --> Set up daily currency rate logger"
 sudo sh -c "echo '0 11 * * * ~/billing/yii cli/get-currency-rates' >> /var/spool/cron/crontabs/`whoami`"
 echo "Done!"
