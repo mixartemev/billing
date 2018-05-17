@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "client".
@@ -34,9 +35,8 @@ class Client extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['city_id', 'name'], 'required'],
             [['city_id', 'currency_id'], 'integer'],
-            [['balance'], 'number'],
             [['name'], 'string', 'max' => 255],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
@@ -51,9 +51,9 @@ class Client extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'city_id' => 'City ID',
+            'city_id' => 'City',
             'balance' => 'Balance',
-            'currency_id' => 'Currency ID',
+            'currency_id' => 'Currency',
         ];
     }
 
@@ -108,18 +108,55 @@ class Client extends \yii\db\ActiveRecord
     /**
      * @param Client $recipient
      * @param float $amount
-     * @param null $currencyId
+     * @return array|bool
+     * @throws BadRequestHttpException
+     */
+    public function sendMoney(Client $recipient, $amount){
+        if($amount > $this->balance){
+            $transaction = new Transaction([
+                'from' => $this->id,
+                'to' => $recipient->id,
+                'value' => $amount,
+            ]);
+            return $transaction->save() ?: $transaction->errors;
+        }
+        throw new BadRequestHttpException('You haven\'t such many money');
+    }
+
+    /**
+     * @param $amount
      * @return array|bool
      */
-    public function sendMomey(Client $recipient, $amount, $currencyId){
-        if($amount > $this->balance)
+    public function getMoney($amount){
         $transaction = new Transaction([
-            'from' => $this->id,
-            'to' => $recipient->id,
-            'currency_id' => $currencyId,
-            'value' => $amount,
-        ]);
+                'to' => $this->id,
+                'value' => $amount,
+            ]);
         return $transaction->save() ?: $transaction->errors;
+    }
+
+    public function getCoeff($currencyId, $date = null){
+        if ($this->currency_id != $currencyId){
+            if ($from == 1){
+                return self::find()
+                    ->select('rate')
+                    ->where(['to' => $currencyId])
+                    ->andFilterWhere(['date' => $date])
+                    ->orderBy('id DESC')
+                    ->one()
+                    ->rate;
+            }
+        }else{
+            return 1;
+        }
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        if(!$this->currency_id && $this->city_id){
+            $this->currency_id = $this->city->country->currency_id;
+        }
     }
 
     public function beforeSave($insert)

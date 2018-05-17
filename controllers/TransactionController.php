@@ -2,12 +2,9 @@
 
 namespace app\controllers;
 
-use app\models\Client;
-use app\models\Currency;
 use Yii;
 use app\models\Transaction;
-use yii\data\ActiveDataProvider;
-use yii\web\BadRequestHttpException;
+use app\models\TransactionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -38,11 +35,11 @@ class TransactionController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Transaction::find(),
-        ]);
+        $searchModel = new TransactionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -104,39 +101,12 @@ class TransactionController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * @param $senderId
-     * @param $recipientId
-     * @param $amount
-     * @param null $currencyId
-     * @return \yii\web\Response
-     * @throws BadRequestHttpException
-     * @throws NotFoundHttpException
-     */
-    public function actionSendMoney($senderId, $recipientId, $amount, $currencyId = null)
-    {
-        /** @var Client $model */
-        $sender = $this->findModel($senderId);
-        if(is_null($currencyId)){
-            $currencyId = $this->currencyId;
-        }
-        $recepicient = Client::findOne($recipientId);
-        if($model->sendMomey($recepicient, $amount, $currencyId)){
-            return $this->redirect(['index']);
-        }
-        //else goto debug
-        $smb = Currency::findOne($currencyId)->symbol;
-        throw new BadRequestHttpException("You cant send $amount $smb to $recepicient->name");
     }
 
     /**
@@ -151,6 +121,7 @@ class TransactionController extends Controller
         if (($model = Transaction::findOne($id)) !== null) {
             return $model;
         }
+
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

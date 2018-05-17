@@ -19,7 +19,7 @@ class m180512_160932_create_transaction_table extends Migration
     {
         $this->createTable('transaction', [
             'id' => $this->primaryKey(),
-            'from' => $this->integer()->unsigned()->notNull(),
+            'from' => $this->integer()->unsigned(),
             'to' => $this->integer()->unsigned()->notNull(),
             'value' => $this->decimal(13,2)->notNull(),
             'currency_id' => $this->integer()->unsigned()->notNull()->defaultValue(1),

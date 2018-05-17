@@ -58,8 +58,8 @@ class m180512_160843_create_client_table extends Migration
         );
 
         $this->insert('client', ['name' => 'Mike', 'city_id' => 2, 'currency_id' => 3]);
-        $this->insert('client', ['name' => 'Daniel', 'city_id' => 1, 'currency_id' => 2, 'balance' => 50]);
-        $this->insert('client', ['name' => 'Nastia', 'city_id' => 4, 'currency_id' => 1, 'balance' => 10]);
+        $this->insert('client', ['name' => 'Daniel', 'city_id' => 1, 'currency_id' => 2]);
+        $this->insert('client', ['name' => 'Nastia', 'city_id' => 4, 'currency_id' => 1]);
         //$this->insert('client', ['name' => 'Bank', 'city_id' => 1, 'currency_id' => 1]);
         //$this->update('client', ['id' => 0], ['name' => 'Bank']);
     }

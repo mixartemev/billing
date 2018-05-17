@@ -106,20 +106,4 @@ class Currency extends \yii\db\ActiveRecord
             print_r($response->data);
         }
     }
-
-    public function getCoeff($currencyId, $date = null){
-        if ($from != $to){
-            if ($from == 1){
-                return self::find()
-                    ->select('rate')
-                    ->where(['to' => $currencyId])
-                    ->andFilterWhere(['date' => $date])
-                    ->orderBy('id DESC')
-                    ->one()
-                    ->rate;
-            }
-        }else{
-            return 1;
-        }
-    }
 }

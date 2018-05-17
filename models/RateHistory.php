@@ -46,7 +46,7 @@ class RateHistory extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'date' => 'Date',
-            'currency_id' => 'Currency ID',
+            'currency_id' => 'Currency',
             'rate' => 'Rate',
         ];
     }

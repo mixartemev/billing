@@ -45,7 +45,7 @@ class Country extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'currency_id' => 'Currency ID',
+            'currency_id' => 'Currency',
         ];
     }
 

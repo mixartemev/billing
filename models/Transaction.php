@@ -34,7 +34,7 @@ class Transaction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['from', 'to', 'value'], 'required'],
+            [['to', 'value'], 'required'],
             [['from', 'to', 'currency_id'], 'integer'],
             [['value'], 'number'],
             [['when'], 'safe'],
@@ -54,7 +54,7 @@ class Transaction extends \yii\db\ActiveRecord
             'from' => 'From',
             'to' => 'To',
             'value' => 'Value',
-            'currency_id' => 'Currency ID',
+            'currency_id' => 'Currency',
             'when' => 'When',
         ];
     }
