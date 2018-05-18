@@ -38,7 +38,6 @@ class Transaction extends \yii\db\ActiveRecord
             [['from', 'to', 'currency_id'], 'integer'],
             [['value'], 'number'],
             [['when'], 'safe'],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
             [['from'], 'exist', 'skipOnError' => true, 'targetClass' => Client::className(), 'targetAttribute' => ['from' => 'id']],
             [['to'], 'exist', 'skipOnError' => true, 'targetClass' => Client::className(), 'targetAttribute' => ['to' => 'id']],
         ];
@@ -81,5 +80,12 @@ class Transaction extends \yii\db\ActiveRecord
     public function getTo0()
     {
         return $this->hasOne(Client::className(), ['id' => 'to']);
+    }
+
+    public function afterSave( $insert, $changedAttributes ) {
+    	if($this->from){ //if it money sending, not balance charging
+
+	    }
+	    parent::afterSave( $insert, $changedAttributes );
     }
 }

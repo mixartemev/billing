@@ -105,18 +105,21 @@ class Client extends \yii\db\ActiveRecord
         Transaction::findAll([]);
     }
 
-    /**
-     * @param Client $recipient
-     * @param float $amount
-     * @return array|bool
-     * @throws BadRequestHttpException
-     */
-    public function sendMoney(Client $recipient, $amount){
-        if($amount > $this->balance){
+	/**
+	 * @param Client $recipient
+	 * @param float $amount
+	 * @param int $currencyId
+	 *
+	 * @return array|bool
+	 * @throws BadRequestHttpException
+	 */
+    public function sendMoney(Client $recipient, $amount, $currencyId){
+    	$value = $amount * $this->getConvertFactor($currencyId);
+        if($amount <= $this->balance){
             $transaction = new Transaction([
                 'from' => $this->id,
                 'to' => $recipient->id,
-                'value' => $amount,
+                'value' => $value,
             ]);
             return $transaction->save() ?: $transaction->errors;
         }
@@ -128,38 +131,30 @@ class Client extends \yii\db\ActiveRecord
      * @return array|bool
      */
     public function getMoney($amount){
-        $transaction = new Transaction([
-                'to' => $this->id,
-                'value' => $amount,
-            ]);
-        return $transaction->save() ?: $transaction->errors;
+	    return (new Transaction([
+		    'to' => $this->id,
+		    'value' => $amount, //
+	    ]))->save();
     }
 
-    public function getCoeff($currencyId, $date = null){
+    private function getConvertFactor($currencyId, $date = null){
         if ($this->currency_id != $currencyId){
-            if ($from == 1){
-                return self::find()
-                    ->select('rate')
-                    ->where(['to' => $currencyId])
-                    ->andFilterWhere(['date' => $date])
-                    ->orderBy('id DESC')
-                    ->one()
-                    ->rate;
-            }
+        	$selfRate = $this->currency_id == 1
+		        ? 1
+		        : $this->currency->getRate($date);
+            return Currency::findOne($currencyId)->getRate($date) / $selfRate;
         }else{
             return 1;
         }
     }
 
-    public function afterFind()
-    {
-        parent::afterFind();
-        if(!$this->currency_id && $this->city_id){
-            $this->currency_id = $this->city->country->currency_id;
-        }
-    }
-
-    public function beforeSave($insert)
+	/**
+	 * Default currency on client create, from country of selected city
+	 * @param bool $insert
+	 *
+	 * @return bool
+	 */
+	public function beforeSave($insert)
     {
         if($insert && !$this->currency_id){
             $this->currency_id = $this->city->country->currency_id;

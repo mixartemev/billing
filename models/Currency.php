@@ -106,4 +106,13 @@ class Currency extends \yii\db\ActiveRecord
             print_r($response->data);
         }
     }
+
+	public function getRate($date = null){
+		return $this->getRateHistories()
+		     ->select('rate')
+		     ->filterWhere(['date' => $date])
+		     ->orderBy('id DESC') //if date isn't set
+		     ->one()
+			 ->rate;
+	}
 }
