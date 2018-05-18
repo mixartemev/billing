@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Currency;
 use Yii;
 use app\models\Client;
 use yii\data\ActiveDataProvider;
@@ -9,6 +10,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * ClientController implements the CRUD actions for Client model.
@@ -139,16 +141,42 @@ class ClientController extends Controller
 	 *
 	 * @return mixed
 	 * @throws NotFoundHttpException
-	 * @throws BadRequestHttpException
+	 * @throws ServerErrorHttpException
 	 */
 	public function actionCharge($id, $amount)
 	{
 		$model = $this->findModel($id);
-		if($res = ($model->getMoney($amount) === true)){
-			//ok
-		}else{
-			var_dump($res);die;
-			throw new BadRequestHttpException($res->errors);
-		};
+		$oldBalance = $model->balance;
+		if($model->getMoney($amount) !== true){
+			throw new ServerErrorHttpException();
+		}
+		return "Success: {$model->name} have {$oldBalance}+{$amount}={$model->balance}{$model->currency->symbol}.";
+	}
+
+	/**
+	 * @param int $senderId
+	 * @param int $recipientId
+	 * @param float $amount
+	 * @param int|null $currencyId
+	 *
+	 * @return string
+	 * @throws BadRequestHttpException
+	 * @throws NotFoundHttpException
+	 */
+	public function actionSend($senderId, $recipientId, $amount, $currencyId = null)
+	{
+		$sender = $this->findModel($senderId);
+		$recipient = $this->findModel($recipientId);
+
+		if(!$currencyId){ //recipient currency by default
+			$currencyId = $recipient->currency_id;
+		}
+		if(!in_array($currencyId, [$sender->currency_id, $recipient->currency_id])){
+			throw new BadRequestHttpException('You cant use this currency');
+		}
+
+		$sender->sendMoney($recipient, $amount, $currencyId);
+
+		return "Success: {$sender->name} send to {$recipient->name} " . $amount . Currency::findOne($currencyId)->symbol;
 	}
 }

@@ -1,8 +1,7 @@
 <?php
 
 namespace app\models;
-
-use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "transaction".
@@ -10,13 +9,13 @@ use Yii;
  * @property int $id
  * @property int $from
  * @property int $to
- * @property string $value
+ * @property float $value
  * @property int $currency_id
  * @property string $when
  *
  * @property Currency $currency
- * @property Client $from0
- * @property Client $to0
+ * @property Client $sender
+ * @property Client $recipient
  */
 class Transaction extends \yii\db\ActiveRecord
 {
@@ -35,26 +34,12 @@ class Transaction extends \yii\db\ActiveRecord
     {
         return [
             [['to', 'value'], 'required'],
-            [['from', 'to', 'currency_id'], 'integer'],
+            [['from', 'to'], 'integer'],
             [['value'], 'number'],
             [['when'], 'safe'],
+	        [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
             [['from'], 'exist', 'skipOnError' => true, 'targetClass' => Client::className(), 'targetAttribute' => ['from' => 'id']],
             [['to'], 'exist', 'skipOnError' => true, 'targetClass' => Client::className(), 'targetAttribute' => ['to' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'from' => 'From',
-            'to' => 'To',
-            'value' => 'Value',
-            'currency_id' => 'Currency',
-            'when' => 'When',
         ];
     }
 
@@ -69,7 +54,7 @@ class Transaction extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFrom0()
+    public function getSender()
     {
         return $this->hasOne(Client::className(), ['id' => 'from']);
     }
@@ -77,15 +62,33 @@ class Transaction extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTo0()
+    public function getRecipient()
     {
         return $this->hasOne(Client::className(), ['id' => 'to']);
     }
 
-    public function afterSave( $insert, $changedAttributes ) {
-    	if($this->from){ //if it money sending, not balance charging
+	/**
+	 * @param bool $insert
+	 *
+	 * @return bool
+	 * @throws BadRequestHttpException
+	 */
+	public function beforeSave( $insert ) {
+		if($this->from){ //if it money sending, not balance charging
+			$senderMinus = $this->value * $this->sender->getConvertFactor($this->currency); //todo think about DRY
+			if($this->sender->balance < $senderMinus) {
+				throw new BadRequestHttpException('You haven\'t such many money');
+			}
+			$this->sender->balance -= $senderMinus;
+			//$this->sender->save();
+		}
+		return parent::beforeSave( $insert );
+	}
 
-	    }
-	    parent::afterSave( $insert, $changedAttributes );
+	public function afterSave( $insert, $changedAttributes ) {
+		parent::afterSave( $insert, $changedAttributes );
+
+	    $this->recipient->balance +=  $this->value * $this->recipient->getConvertFactor($this->currency);
+    	$this->recipient->save();
     }
 }

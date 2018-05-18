@@ -11,7 +11,7 @@ use yii\web\BadRequestHttpException;
  * @property int $id
  * @property string $name
  * @property int $city_id
- * @property string $balance
+ * @property float $balance
  * @property int $currency_id
  *
  * @property City $city
@@ -40,20 +40,6 @@ class Client extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'city_id' => 'City',
-            'balance' => 'Balance',
-            'currency_id' => 'Currency',
         ];
     }
 
@@ -101,7 +87,7 @@ class Client extends \yii\db\ActiveRecord
         Transaction::findAll([]);
     }
 
-    public function getBalance(){
+    public function checkBalance(){
         Transaction::findAll([]);
     }
 
@@ -111,19 +97,15 @@ class Client extends \yii\db\ActiveRecord
 	 * @param int $currencyId
 	 *
 	 * @return array|bool
-	 * @throws BadRequestHttpException
 	 */
-    public function sendMoney(Client $recipient, $amount, $currencyId){
-    	$value = $amount * $this->getConvertFactor($currencyId);
-        if($amount <= $this->balance){
-            $transaction = new Transaction([
-                'from' => $this->id,
-                'to' => $recipient->id,
-                'value' => $value,
-            ]);
-            return $transaction->save() ?: $transaction->errors;
-        }
-        throw new BadRequestHttpException('You haven\'t such many money');
+    public function sendMoney($recipient, $amount, $currencyId){
+        $transaction = new Transaction([
+            'from' => $this->id,
+            'to' => $recipient->id,
+            'value' => $amount,
+            'currency_id' => $currencyId,
+        ]);
+        return $transaction->save() ?: $transaction->errors;
     }
 
     /**
@@ -133,20 +115,21 @@ class Client extends \yii\db\ActiveRecord
     public function getMoney($amount){
 	    return (new Transaction([
 		    'to' => $this->id,
-		    'value' => $amount, //
+		    'value' => $amount,
 	    ]))->save();
     }
 
-    private function getConvertFactor($currencyId, $date = null){
-        if ($this->currency_id != $currencyId){
-        	$selfRate = $this->currency_id == 1
-		        ? 1
-		        : $this->currency->getRate($date);
-            return Currency::findOne($currencyId)->getRate($date) / $selfRate;
-        }else{
-            return 1;
-        }
-    }
+	/**
+	 * @param Currency $targetCurrency
+	 * @param null|string $date
+	 *
+	 * @return float|int
+	 */
+	public function getConvertFactor($targetCurrency, $date = null){
+		return $this->currency_id == $targetCurrency->id
+			? 1
+			: $targetCurrency->getRate($date) / $this->currency->getRate($date);
+	}
 
 	/**
 	 * Default currency on client create, from country of selected city
