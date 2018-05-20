@@ -80,15 +80,14 @@ class Transaction extends \yii\db\ActiveRecord
 				throw new BadRequestHttpException('You haven\'t such many money');
 			}
 			$this->sender->balance -= $senderMinus;
-			//$this->sender->save();
+			$this->sender->save();
 		}
 		return parent::beforeSave( $insert );
 	}
 
 	public function afterSave( $insert, $changedAttributes ) {
-		parent::afterSave( $insert, $changedAttributes );
-
 	    $this->recipient->balance +=  $this->value * $this->recipient->getConvertFactor($this->currency);
     	$this->recipient->save();
+        parent::afterSave( $insert, $changedAttributes );
     }
 }

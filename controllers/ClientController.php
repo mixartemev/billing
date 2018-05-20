@@ -150,6 +150,7 @@ class ClientController extends Controller
 		if($model->getMoney($amount) !== true){
 			throw new ServerErrorHttpException();
 		}
+		$model->refresh();
 		return "Success: {$model->name} have {$oldBalance}+{$amount}={$model->balance}{$model->currency->symbol}.";
 	}
 
@@ -175,8 +176,15 @@ class ClientController extends Controller
 			throw new BadRequestHttpException('You cant use this currency');
 		}
 
-		$sender->sendMoney($recipient, $amount, $currencyId);
+		$senderOldBalance = $sender->balance;
+		$recipientOldBalance = $recipient->balance;
 
-		return "Success: {$sender->name} send to {$recipient->name} " . $amount . Currency::findOne($currencyId)->symbol;
+		$sender->sendMoney($recipient, $amount, $currencyId);
+		$sender->refresh();
+		$recipient->refresh();
+		return "Success:\n
+		{$sender->name} have {$senderOldBalance}-{$amount}={$sender->balance}{$sender->currency->symbol}
+		{$recipient->name} have {$recipientOldBalance}+{$amount}={$recipient->balance}{$recipient->currency->symbol}
+		.";
 	}
 }
