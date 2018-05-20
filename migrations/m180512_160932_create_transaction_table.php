@@ -22,7 +22,7 @@ class m180512_160932_create_transaction_table extends Migration
             'from' => $this->integer()->unsigned(),
             'to' => $this->integer()->unsigned()->notNull(),
             'value' => $this->decimal(13,2)->notNull(),
-            'currency_id' => $this->integer()->unsigned()->notNull()->defaultValue(1),
+            'currency_id' => $this->integer()->unsigned()->notNull(),
             'when' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')
         ]);
 

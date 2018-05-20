@@ -7,7 +7,7 @@
         <h3>Simplest demo implementation</h3>
         <br>
         <p class="lead">
-            For description go to <a href="https://github.com/mixartemev/billing">https://github.com/mixartemev/billing</a>
+            Details at <a href="https://github.com/mixartemev/billing">https://github.com/mixartemev/billing</a>
         </p>
     </div>
 </div>

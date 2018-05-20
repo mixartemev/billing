@@ -116,6 +116,7 @@ class Client extends \yii\db\ActiveRecord
 	    return (new Transaction([
 		    'to' => $this->id,
 		    'value' => $amount,
+            'currency_id' => $this->currency_id
 	    ]))->save();
     }
 
