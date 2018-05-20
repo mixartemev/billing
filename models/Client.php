@@ -44,6 +44,17 @@ class Client extends \yii\db\ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'city_id' => 'City',
+            'currency_id' => 'Currency',
+        ];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getCity()

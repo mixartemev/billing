@@ -17,6 +17,8 @@ use yii\web\ServerErrorHttpException;
  */
 class ClientController extends Controller
 {
+    use SortAddable;
+
     /**
      * {@inheritdoc}
      */
@@ -39,8 +41,10 @@ class ClientController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Client::find(),
+            'query' => Client::find()->joinWith(['city', 'currency']),
         ]);
+        $dataProvider->sort->attributes []= ['city.name' => SORT_ASC];
+        self::addSort($dataProvider->sort->attributes, ['city.name','currency.symbol']);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
