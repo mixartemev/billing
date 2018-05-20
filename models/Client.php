@@ -129,7 +129,7 @@ class Client extends \yii\db\ActiveRecord
 	public function getConvertFactor($targetCurrency, $date = null){
 		return $this->currency_id == $targetCurrency->id
 			? 1
-			: $targetCurrency->getRate($date) / $this->currency->getRate($date);
+			: $this->currency->getRate($date) / $targetCurrency->getRate($date);
 	}
 
 	/**
