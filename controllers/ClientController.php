@@ -180,11 +180,13 @@ class ClientController extends Controller
 		$recipientOldBalance = $recipient->balance;
 
 		$sender->sendMoney($recipient, $amount, $currencyId);
+
 		$sender->refresh();
 		$recipient->refresh();
-		return "Success:\n
-		{$sender->name} have {$senderOldBalance}-{$amount}={$sender->balance}{$sender->currency->symbol}
-		{$recipient->name} have {$recipientOldBalance}+{$amount}={$recipient->balance}{$recipient->currency->symbol}
-		.";
+
+		$transactionCurrencySymbol = Currency::findOne($currencyId)->symbol;
+
+		return "Success: {$sender->name} have {$senderOldBalance}{$sender->currency->symbol}-{$amount}{$transactionCurrencySymbol}={$sender->balance}{$sender->currency->symbol}
+		 {$recipient->name} have {$recipientOldBalance}{$recipient->currency->symbol}+{$amount}{$transactionCurrencySymbol}={$recipient->balance}{$recipient->currency->symbol}.";
 	}
 }
