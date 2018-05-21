@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\helpers\ArrayHelper;
 use yii\httpclient\Client as HttpClient;
+use yii\web\ServerErrorHttpException;
 
 /**
  * This is the model class for table "currency".
@@ -50,37 +51,15 @@ class Currency extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getClients()
-    {
-        return $this->hasMany(Client::className(), ['currency_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCountries()
-    {
-        return $this->hasMany(Country::className(), ['currency_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getRateHistories()
     {
-        return $this->hasMany(RateHistory::className(), ['currency_id' => 'id']);
+        return $this->hasMany(RateHistory::class, ['currency_id' => 'id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTransactions()
-    {
-        return $this->hasMany(Transaction::className(), ['currency_id' => 'id']);
-    }
-
-    /**
+     * Func for cron daily task to log rate
      * @return bool
+     * @throws ServerErrorHttpException
      */
     public static function dailyRates()
     {
@@ -96,19 +75,17 @@ class Currency extends \yii\db\ActiveRecord
                     'rate' => $response->data[$currency]['rate'],
                 ]);
                 if(!$rate->save()){
-                    print_r($rate->errors);
-                    return false;
+                    throw new ServerErrorHttpException(implode('|', $rate->errors));
                 }
             }
             return true;
         }else{
-            print_r($response->data);
+            return $response->statusCode;
         }
     }
 
 	/**
-	 * @param null|string $date
-	 *
+	 * @param null|string $date if null - return last rate
 	 * @return float
 	 */
 	public function getRate($date = null){

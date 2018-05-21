@@ -39,8 +39,8 @@ class Client extends \yii\db\ActiveRecord
             [['city_id', 'name'], 'required'],
             [['city_id', 'country_id', 'currency_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -60,7 +60,7 @@ class Client extends \yii\db\ActiveRecord
      */
     public function getCity()
     {
-        return $this->hasOne(City::className(), ['id' => 'city_id']);
+        return $this->hasOne(City::class, ['id' => 'city_id']);
     }
 
 	/**
@@ -76,32 +76,25 @@ class Client extends \yii\db\ActiveRecord
      */
     public function getCurrency()
     {
-        return $this->hasOne(Currency::className(), ['id' => 'currency_id']);
+        return $this->hasOne(Currency::class, ['id' => 'currency_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTransactions()
+    public function getOutbox()
     {
-        return $this->hasMany(Transaction::className(), ['from' => 'id']);
+        return $this->hasMany(Transaction::class, ['from' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTransactions0()
+    public function getInbox()
     {
-        return $this->hasMany(Transaction::className(), ['to' => 'id']);
+        return $this->hasMany(Transaction::class, ['to' => 'id']);
     }
 
-    public function getDebit(){
-        foreach (Transaction::findAll(['to' => $this->id]) as $in){
-            if($in->currency_id != $this->currency_id){
-
-            }
-        }
-    }
 
     public function getCredit(){
         Transaction::findAll([]);
@@ -141,15 +134,15 @@ class Client extends \yii\db\ActiveRecord
     }
 
 	/**
-	 * @param Currency $targetCurrency
+	 * @param int $transactionCurrencyId
 	 * @param null|string $date
 	 *
 	 * @return float|int
 	 */
-	public function getConvertFactor($targetCurrency, $date = null){
-		return $this->currency_id == $targetCurrency->id
+	public function getConvertFactor($transactionCurrencyId, $date = null){
+		return $this->currency_id == $transactionCurrencyId
 			? 1
-			: $this->currency->getRate($date) / $targetCurrency->getRate($date);
+			: $this->currency->getRate($date) / Currency::findOne($transactionCurrencyId)->getRate($date);
 	}
 
 	/**

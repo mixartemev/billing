@@ -8,6 +8,7 @@
 namespace app\commands;
 
 use app\models\Currency;
+use app\models\Transaction;
 use yii\console\Controller;
 use yii\console\ExitCode;
 
@@ -21,8 +22,20 @@ use yii\console\ExitCode;
  */
 class CliController extends Controller
 {
+    /**
+     * @return int
+     * @throws \yii\web\ServerErrorHttpException
+     */
     public function actionGetCurrencyRates()
     {
         return Currency::dailyRates() ? ExitCode::OK : ExitCode::UNSPECIFIED_ERROR;
+    }
+
+    public function actionHydroTransactions()
+    {
+        (new Transaction(['to' => 1, 'value' => 1500]))->save();
+        (new Transaction(['from' => 1, 'to' => 2, 'value' => 5.5]))->save();
+        (new Transaction(['from' => 1, 'to' => 3, 'value' => 6.45]))->save();
+        (new Transaction(['from' => 2, 'to' => 3, 'value' => 3]))->save();
     }
 }

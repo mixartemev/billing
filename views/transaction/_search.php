@@ -23,9 +23,9 @@ use yii\widgets\ActiveForm;
 	             ->dropDownList(ArrayHelper::map(Client::find()->all(), 'id', 'name')) ?>
         <br>
 	    <?= $form->field($model, 'beginPeriod', ['options' => ['class' => 'col-xs-6']])->textInput(['options' => ['class' => 'form-control']])
-	             ->widget( DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd']) ?>
+	             ->widget( DatePicker::class, ['dateFormat' => 'yyyy-MM-dd']) ?>
 	    <?= $form->field($model, 'endPeriod', ['options' => ['class' => 'col-xs-6']])
-	             ->widget( DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd']) ?>
+	             ->widget( DatePicker::class, ['dateFormat' => 'yyyy-MM-dd']) ?>
     </div>
 
     <div class="form-group">

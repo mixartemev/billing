@@ -20,10 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
-            'sender',
-            'recipient',
+            'senderName',
+            'recipientName',
             'value',
-            'currencyName',
+            'cur',
 	        'when:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],

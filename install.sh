@@ -2,7 +2,6 @@
 
 read -e -p "db login: " -i "root" db_login
 read -p "db password: " db_password
-read -e -p "full path to your project dir: " -i "~/www/billing" project_dir
 
 echo "#1. --> Get dependencies"
 composer install
@@ -22,6 +21,11 @@ echo "#4. --> Create database structure and fill it"
 php yii migrate --interactive=0
 echo "Done!"
 
-echo "#5. --> Set up daily currency rate logger"
-sudo sh -c "echo '1 10 * * * $project_dir/yii cli/get-currency-rates' >> /var/spool/cron/crontabs/`whoami`"
+echo "#5. --> Set up daily currency rate logger and first run"
+sudo sh -c "echo '1 10 * * * `pwd`/yii cli/get-currency-rates' >> /var/spool/cron/crontabs/`whoami`"
+./yii cli/get-currency-rates
+echo "Done!"
+
+echo "#6. --> Fill example transactions"
+./yii cli/hydro-transactions
 echo "Done!"

@@ -36,15 +36,6 @@ class TransactionSearch extends Transaction
 	}
 
     /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
-
-    /**
      * Creates data provider instance with search query applied
      *
      * @param array $params
@@ -58,10 +49,10 @@ class TransactionSearch extends Transaction
 	    $query = Transaction::find()
 		    ->select([
 		    	'transaction.id',
-			    'sender' => 'IFNULL(from.name, "(FROM BANK)")',
-			    'recipient' => 'to.name',
+			    'senderName' => 'IFNULL(from.name, "(FROM BANK)")',
+			    'recipientName' => 'to.name',
 			    'value',
-			    'currencyName' => 'currency.symbol',
+			    'cur' => 'currency.symbol',
 			    'when'
 		    ])
 		    ->leftJoin('`client` `from`','`transaction`.`from` = `from`.id')
@@ -70,19 +61,11 @@ class TransactionSearch extends Transaction
 		    ->where(['OR', '`from` = ' . $this->clientId, '`to` = ' . $this->clientId])
 	    ;
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-	    SortAddable::addSort($dataProvider->sort->attributes, ['sender' ,'recipient' ,'currencyName']);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
+	    SortAddable::addSort($dataProvider->sort->attributes, ['senderName' ,'recipientName' ,'cur']);
 
         // grid filtering conditions
         $query->andFilterWhere(['>=', 'when', $this->beginPeriod ? $this->beginPeriod . ' 00:00:00' : null]);

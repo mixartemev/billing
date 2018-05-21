@@ -33,7 +33,7 @@ class Country extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['currency_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -53,7 +53,7 @@ class Country extends \yii\db\ActiveRecord
      */
     public function getCities()
     {
-        return $this->hasMany(City::className(), ['country_id' => 'id']);
+        return $this->hasMany(City::class, ['country_id' => 'id']);
     }
 
     /**
@@ -61,6 +61,6 @@ class Country extends \yii\db\ActiveRecord
      */
     public function getCurrency()
     {
-        return $this->hasOne(Currency::className(), ['id' => 'currency_id']);
+        return $this->hasOne(Currency::class, ['id' => 'currency_id']);
     }
 }

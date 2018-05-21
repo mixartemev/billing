@@ -19,16 +19,16 @@ class RateHistoryController extends Controller
 	 *
 	 * @return mixed
 	 */
-	public function actionRate($currencyId = null, $date = null)
+	public function actionToUsd($currencyId/* = null*/, $date = null)
 	{
-		if($currencyId){
+		//if($currencyId){
 			return Currency::findOne($currencyId)->getRate($date);
-		}else{
+		/*}else{
 			return RateHistory::find()
               ->select('rate')
               ->filterWhere(['date' => $date])
               ->orderBy('id DESC') //if date isn't set
               ->one()->rate;
-		}
+		}*/
 	}
 }

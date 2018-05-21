@@ -32,7 +32,7 @@ class RateHistory extends \yii\db\ActiveRecord
             [['date'], 'safe'],
             [['currency_id'], 'integer'],
             [['rate'], 'number'],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -54,6 +54,6 @@ class RateHistory extends \yii\db\ActiveRecord
      */
     public function getCurrency()
     {
-        return $this->hasOne(Currency::className(), ['id' => 'currency_id']);
+        return $this->hasOne(Currency::class, ['id' => 'currency_id']);
     }
 }

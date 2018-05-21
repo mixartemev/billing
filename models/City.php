@@ -33,7 +33,7 @@ class City extends \yii\db\ActiveRecord
             [['name', 'country_id'], 'required'],
             [['country_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::class, 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 
@@ -53,7 +53,7 @@ class City extends \yii\db\ActiveRecord
      */
     public function getCountry()
     {
-        return $this->hasOne(Country::className(), ['id' => 'country_id']);
+        return $this->hasOne(Country::class, ['id' => 'country_id']);
     }
 
     /**
@@ -61,6 +61,6 @@ class City extends \yii\db\ActiveRecord
      */
     public function getClients()
     {
-        return $this->hasMany(Client::className(), ['city_id' => 'id']);
+        return $this->hasMany(Client::class, ['city_id' => 'id']);
     }
 }
