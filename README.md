@@ -38,7 +38,7 @@ INSTALLATION
 *If (* you happy linux user, you can install this project using the one following command: *) {*
 
 ~~~
-git clone git@github.com:mixartemev/billing.git && cd billing && sh install.sh root 321
+git clone git@github.com:mixartemev/billing.git && cd billing && ./install.sh
 ~~~
 
 *} else {*
@@ -67,13 +67,13 @@ composer install
 
 **4. Configure database access**
 
-Edit the file `config/db.php` with real data, for example:
+Edit the file `config/db.php` with real data:
 ```php
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=billing',
-    'username' => 'root',
-    'password' => '321',
+    'username' => {mysql_login},
+    'password' => {mysql_password},
 ];
 ```
 *NOTES:*
@@ -142,4 +142,4 @@ GET http://billing/rate-history/rate?currencyId=2&date=2018-05-21
 #### Отчет отображает историю всех операций по кошельку указанного клиента за период.
 - Параметры: Имя клиента (обязательный параметр), Начало периода (необязательный параметр), конец периода (необязательный параметр).
 - Выводится общая сумма операций по счету за период в USD и валюте счета
-- Результат отчета можно экспортировать в файл CSV
+- Результат отчета можно экспортировать в файл XML
