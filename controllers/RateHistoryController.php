@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\models\Currency;
-use app\models\RateHistory;
+//use app\models\RateHistory;
 use yii\web\Controller;
 
 /**

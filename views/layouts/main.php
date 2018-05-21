@@ -39,8 +39,6 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Clients', 'url' => ['/client/index']],
-            ['label' => 'Transactions', 'url' => ['/transaction/index']],
-            ['label' => 'Currency Rates', 'url' => ['/rate-history/index']],
         ],
     ]);
     NavBar::end();

@@ -38,13 +38,13 @@ class m180512_103838_create_city_table extends Migration
             'CASCADE'
         );
 
-        $this->insert('city', ['name' => 'limassol', 'country_id' => 1]);
-        $this->insert('city', ['name' => 'moscow', 'country_id' => 2]);
-        $this->insert('city', ['name' => 'ekaterinburg', 'country_id' => 2]);
-        $this->insert('city', ['name' => 'los angeles', 'country_id' => 3]);
-        $this->insert('city', ['name' => 'new york', 'country_id' => 3]);
-        $this->insert('city', ['name' => 'tokyo', 'country_id' => 4]);
-        $this->insert('city', ['name' => 'nicosia', 'country_id' => 1]);
+        $this->insert('city', ['name' => 'Limassol', 'country_id' => 1]);
+        $this->insert('city', ['name' => 'Moscow', 'country_id' => 2]);
+        $this->insert('city', ['name' => 'Ekaterinburg', 'country_id' => 2]);
+        $this->insert('city', ['name' => 'Los Angeles', 'country_id' => 3]);
+        $this->insert('city', ['name' => 'New York', 'country_id' => 3]);
+        $this->insert('city', ['name' => 'Tokyo', 'country_id' => 4]);
+        $this->insert('city', ['name' => 'Nicosia', 'country_id' => 1]);
     }
 
     /**

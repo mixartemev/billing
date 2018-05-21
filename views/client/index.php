@@ -29,9 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'city.name',
             'country.name',
-            'balance',
-            'currency.symbol',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'balance',
+                'value' => function ($model) {
+                    return $model->balance .' '. strtoupper($model->currency->symbol);
+                }
+            ],
         ],
     ]); ?>
 </div>

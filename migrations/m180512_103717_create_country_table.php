@@ -35,11 +35,11 @@ class m180512_103717_create_country_table extends Migration
             'CASCADE'
         );
 
-        $this->insert('country', ['name' => 'cyprus', 'currency_id' => 2]);
-        $this->insert('country', ['name' => 'russia', 'currency_id' => 3]);
-        $this->insert('country', ['name' => 'usa', 'currency_id' => 1]);
-        $this->insert('country', ['name' => 'japan', 'currency_id' => 6]);
-        $this->insert('country', ['name' => 'china', 'currency_id' => 7]);
+        $this->insert('country', ['name' => 'Cyprus', 'currency_id' => 2]);
+        $this->insert('country', ['name' => 'Russia', 'currency_id' => 3]);
+        $this->insert('country', ['name' => 'USA', 'currency_id' => 1]);
+        $this->insert('country', ['name' => 'Japan', 'currency_id' => 6]);
+        $this->insert('country', ['name' => 'China', 'currency_id' => 7]);
 
     }
 
