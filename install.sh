@@ -6,6 +6,7 @@ read -e -p "full path to your project dir: " -i "~/www/billing" project_dir
 
 echo "#1. --> Get dependencies"
 composer install
+composer install
 echo "Done!"
 
 echo "#2. --> Configure database access"
