@@ -151,11 +151,15 @@ class ClientController extends Controller
 	public function actionCharge($id, $amount)
 	{
 		$model = $this->findModel($id);
-		$oldBalance = $model->balance;
 		if($model->getMoney($amount) !== true){
 			throw new ServerErrorHttpException();
 		}
-		$model->refresh();
+
+		/** Only for return check info, it might be removed */
+		/**/ $oldBalance = $model->balance;
+		/**/ $model->refresh();
+		/** Only for return check info, it might be removed */
+
 		return "Success: {$model->name} have {$oldBalance}+{$amount}={$model->balance}{$model->currency->symbol}.";
 	}
 
@@ -181,15 +185,15 @@ class ClientController extends Controller
 			throw new BadRequestHttpException('You cant use this currency');
 		}
 
-		$senderOldBalance = $sender->balance;
-		$recipientOldBalance = $recipient->balance;
-
 		$sender->sendMoney($recipient, $amount, $currencyId);
 
-		$sender->refresh();
-		$recipient->refresh();
-
-		$transactionCurrencySymbol = Currency::findOne($currencyId)->symbol;
+		/** Only for return check info, it might be removed */
+		/**/ $senderOldBalance = $sender->balance;
+		/**/ $recipientOldBalance = $recipient->balance;
+		/**/ $sender->refresh();
+		/**/ $recipient->refresh();
+		/**/ $transactionCurrencySymbol = Currency::findOne($currencyId)->symbol;
+		/** Only for return check info, it might be removed */
 
 		return "Success: {$sender->name} have {$senderOldBalance}{$sender->currency->symbol}-{$amount}{$transactionCurrencySymbol}={$sender->balance}{$sender->currency->symbol}
 		 {$recipient->name} have {$recipientOldBalance}{$recipient->currency->symbol}+{$amount}{$transactionCurrencySymbol}={$recipient->balance}{$recipient->currency->symbol}.";

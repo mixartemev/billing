@@ -22,5 +22,5 @@ php yii migrate --interactive=0
 echo "Done!"
 
 echo "#5. --> Set up daily currency rate logger"
-sudo sh -c "echo '0 11 * * * $project_dir/yii cli/get-currency-rates' >> /var/spool/cron/crontabs/`whoami`"
+sudo sh -c "echo '1 10 * * * $project_dir/yii cli/get-currency-rates' >> /var/spool/cron/crontabs/`whoami`"
 echo "Done!"
