@@ -2,12 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\Client;
 use Yii;
 use app\models\Transaction;
 use app\models\TransactionSearch;
+use yii\db\ActiveQuery;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\web\XmlResponseFormatter;
 
 /**
  * TransactionController implements the CRUD actions for Transaction model.
@@ -29,14 +34,27 @@ class TransactionController extends Controller
         ];
     }
 
-    /**
-     * Lists all Transaction models.
-     * @return mixed
-     */
-    public function actionIndex()
+	/**
+	 * Lists all Transaction models.
+	 *
+	 * @param null $xml
+	 *
+	 * @return mixed
+	 */
+    public function actionIndex($xml = null)
     {
         $searchModel = new TransactionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        if($xml){
+	        Yii::$app->response->format = Response::FORMAT_XML;
+	        $period = ($searchModel->beginPeriod ?: 'mesozoic') .'_'. ($searchModel->endPeriod ?: date('Y-m-d'));
+	        $fileName = Client::findOne($searchModel->clientId)->name . "_transactions_{$period}.xml";
+	        //var_dump($fileName);die;
+	        Yii::$app->response->setDownloadHeaders($fileName);
+	        /** @var ActiveQuery $q */
+	        return $dataProvider->query->asArray()->all();
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,

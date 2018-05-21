@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Currency;
+use app\models\TransactionSearch;
 use Yii;
 use app\models\Client;
 use yii\data\ActiveDataProvider;
@@ -41,10 +42,10 @@ class ClientController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Client::find()->joinWith(['city', 'currency']),
+            'query' => Client::find()->joinWith(['city', 'currency', 'city.country']),
         ]);
         $dataProvider->sort->attributes []= ['city.name' => SORT_ASC];
-        self::addSort($dataProvider->sort->attributes, ['city.name','currency.symbol']);
+        self::addSort($dataProvider->sort->attributes, ['city.name', 'country.name', 'currency.symbol']);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

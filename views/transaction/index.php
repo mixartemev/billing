@@ -12,27 +12,24 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="transaction-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Transaction', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?= $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'emptyTextOptions' => ['class' => 'danger'],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'from',
-            'to',
+            'sender',
+            'recipient',
             'value',
-            'currency_id',
-            //'when',
+            'currencyName',
+	        'when:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
+    <?= Html::a('XML', Yii::$app->request->url . '&xml=1', ['class' => 'btn btn-warning']) ?>
+
 </div>

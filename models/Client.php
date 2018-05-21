@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use Yii;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "client".
@@ -61,6 +61,14 @@ class Client extends \yii\db\ActiveRecord
     public function getCity()
     {
         return $this->hasOne(City::className(), ['id' => 'city_id']);
+    }
+
+	/**
+	 * @return Country
+	 */
+    public function getCountry()
+    {
+        return @$this->city->country;
     }
 
     /**
@@ -146,14 +154,21 @@ class Client extends \yii\db\ActiveRecord
 
 	/**
 	 * Default currency on client create, from country of selected city
+	 *
 	 * @param bool $insert
 	 *
 	 * @return bool
+	 * @throws BadRequestHttpException
 	 */
 	public function beforeSave($insert)
     {
-        if($insert && !$this->currency_id){
-            $this->currency_id = $this->city->country->currency_id;
+        if($insert){
+	        if($this->country_id && $this->country_id != $this->city->country_id){
+		        throw new BadRequestHttpException(ucfirst($this->city->name) . ' is not in ' . ucfirst(Country::findOne($this->country_id)->name));
+	        }
+	        if(!$this->currency_id){
+		        $this->currency_id = $this->city->country->currency_id;
+	        }
         }
         return parent::beforeSave($insert);
     }

@@ -43,8 +43,7 @@ class Country extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Country',
             'currency_id' => 'Currency',
         ];
     }

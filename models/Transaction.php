@@ -27,6 +27,8 @@ class Transaction extends \yii\db\ActiveRecord
         return 'transaction';
     }
 
+    public $sender, $recipient, $currencyName;
+
     /**
      * {@inheritdoc}
      */
@@ -42,6 +44,18 @@ class Transaction extends \yii\db\ActiveRecord
             [['to'], 'exist', 'skipOnError' => true, 'targetClass' => Client::className(), 'targetAttribute' => ['to' => 'id']],
         ];
     }
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'sender.name' => 'Sender',
+			'recipient.name' => 'Recipient',
+			'currency_id' => 'Currency',
+		];
+	}
 
     /**
      * @return \yii\db\ActiveQuery

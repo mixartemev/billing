@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Currency;
 use app\models\RateHistory;
 use yii\web\Controller;
 
@@ -18,14 +19,16 @@ class RateHistoryController extends Controller
 	 *
 	 * @return mixed
 	 */
-	public function actionRate($currencyId, $date = null)
+	public function actionRate($currencyId = null, $date = null)
 	{
-		return RateHistory::find()
-		        ->select('rate')
-				->where(['currency_id' => $currencyId])
-				->filterWhere(['date' => $date])
-				->orderBy('id DESC') //if date isn't set
-				->one()
-				->rate;
+		if($currencyId){
+			return Currency::findOne($currencyId)->getRate($date);
+		}else{
+			return RateHistory::find()
+              ->select('rate')
+              ->filterWhere(['date' => $date])
+              ->orderBy('id DESC') //if date isn't set
+              ->one()->rate;
+		}
 	}
 }

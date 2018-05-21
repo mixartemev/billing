@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -19,11 +20,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'name',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->name, Url::to(['transaction/index', 'TransactionSearch[clientId]' => $model->id]));
+                }
+            ],
             'city.name',
+            'country.name',
             'balance',
             'currency.symbol',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
