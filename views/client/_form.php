@@ -13,7 +13,7 @@ use app\models\Country;
 
 <div class="client-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['method' => 'get']); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

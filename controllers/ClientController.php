@@ -71,10 +71,11 @@ class ClientController extends Controller
      */
     public function actionCreate()
     {
+        $this->enableCsrfValidation = false;
         $model = new Client();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(['Client' => Yii::$app->request->get()]) && $model->save()) {
+            return "Successful: Client {$model->name} from {$model->city->country->name} {$model->city->name} created, and use {$model->currency->symbol}";
         }
 
         return $this->render('create', [

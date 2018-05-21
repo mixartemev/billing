@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "client".
@@ -29,6 +28,8 @@ class Client extends \yii\db\ActiveRecord
         return 'client';
     }
 
+    public $country_id;
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +37,7 @@ class Client extends \yii\db\ActiveRecord
     {
         return [
             [['city_id', 'name'], 'required'],
-            [['city_id', 'currency_id'], 'integer'],
+            [['city_id', 'country_id', 'currency_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::className(), 'targetAttribute' => ['currency_id' => 'id']],
