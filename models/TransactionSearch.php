@@ -46,6 +46,17 @@ class TransactionSearch extends Transaction
     {
 	    $this->load($params);
 
+//SELECT `transaction`.`id`, `from`, `to`, concat(value, currency.symbol) as transVal,
+//IF(1=`transaction`.currency_id, value, value /*($client_rate_on_transDate)*/ /trans_rate.rate) as clientVal,
+//`transaction`.currency_id, trans_rate.rate, `when`
+//FROM `transaction`
+//LEFT JOIN `client` `from` ON `transaction`.`from` = `from`.id
+//LEFT JOIN `client` `to` ON `transaction`.`to` = `to`.id
+//LEFT JOIN `currency` ON `transaction`.currency_id = currency.id
+//LEFT JOIN (SELECT currency_id, rate, date FROM rate_history) `trans_rate`
+//     ON `trans_rate`.currency_id = currency.id AND `trans_rate`.date = DATE_FORMAT(`when`, '%Y-%m-%d')
+//WHERE ((`from` =1) OR (`to` =1)) AND (`when` >= '2018-05-20 00:00:00')
+
 	    $query = Transaction::find()
 		    ->select([
 		    	'transaction.id',
